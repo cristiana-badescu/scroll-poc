@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Iframe Scroll PoC</title>
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1" />
+    <style>
+      :root {
+        --gap: 16px;
+      }
+      body {
+        font-family: system-ui, Arial, sans-serif;
+        line-height: 1.55;
+        margin: 0;
+      }
+      input {
+        padding: 8px;
+        width: 220px;
+      }
+      button {
+        padding: 8px 12px;
+        cursor: pointer;
+      }
+      main,
+      section {
+        padding: var(--gap);
+      }
+      section {
+        border-top: 1px dashed #ddd;
+        border-bottom: 1px dashed #ddd;
+      }
+      code {
+        background: #f2f2f2;
+        padding: 2px 4px;
+        border-radius: 4px;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>Proof of Concept: Scroll behavior via postMessage</h1>
+      <p> This page is intended to run <strong>inside an iframe</strong>. </p>
+      <p>On navigation within the iframe:</p>
+      <ul>
+        <li>
+          If there is <em>no anchor</em> in the URL (e.g. <code>#...</code> is missing), the computed position is
+          <code>0</code>.<br />
+          That means that there will be a scroll to the top of the iframe if the top of the iframe is not already
+          visible.
+        </li>
+        <li>
+          If there <em>is an anchor</em> (e.g. <code>#my-anchor</code>), the computed position equals the
+          <code>offsetTop</code> (document absolute top) of the element with that ID.<br />
+          That means that there will always be a scroll to that position.
+        </li>
+      </ul>
+      <p>For this POC:</p>
+      <ul>
+        <li>
+          The first type of navigation is simulated by clicking the button below. When you click the button, it sends a
+          postMessage to the parent frame with the computed position intoduced inside the near input.<br />
+          The parent frame can then scroll to that position to demonstrate how scrolling can be coordinated between an
+          iframe
+        </li>
+        <li>
+          The second type of navigation is simulated by clicking on the anchor bellow (<i>Navigate to a diifernt page</i
+          >).<br />
+          The anchor navigation will trigger a scroll to the top of the iframe if the top of the iframe is not already
+          visible.<br />
+          Ajust the scrool position before navigating to see the effect.
+        </li></ul
+      >
+    </main>
+    <section>
+      <!-- <a href="/serviceproxy/homepage-guide-ui/scroll-pos-second-page">Navigate to a diifernt page</a> -->
+      <a href="/public/scroll-pos-second-page.html">Navigate to a diifernt page</a>
+    </section>
+    <section>
+      <strong>Scroll PoC (inside iframe)</strong>
+      <label for="positionInput">Computed position (px):</label>
+      <input
+        id="positionInput"
+        type="number" />
+      <button
+        id="sendBtn"
+        type="button"
+        >Send scroll-request to parent
+      </button>
+    </section>
+
+    <script>
+      // navigation with anchor anchor
+      const input = document.getElementById('positionInput');
+      const btn = document.getElementById('sendBtn');
+
+      btn.addEventListener('click', () => {
+        const position = Number(input.value);
+        const payload = { type: 'scroll-request', position };
+        window.parent.postMessage(payload, '*');
+      });
+
+      // navigation without anchor anchor
+      addEventListener('beforeunload', () => {
+        const position = 0;
+        const payload = { type: 'scroll-request', position };
+        window.parent.postMessage(payload, '*');
+      });
+    </script>
+  </body>
+</html>
