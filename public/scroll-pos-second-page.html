@@ -18,6 +18,12 @@
       main {
         padding: var(--gap);
       }
+      section {
+        margin-top: 300px;
+        padding: 10px 0;
+        border-top: 1px dashed #ddd;
+        border-bottom: 1px dashed #ddd;
+      }
     </style>
   </head>
   <body>
@@ -25,6 +31,9 @@
       <!-- <a href="/serviceproxy/homepage-guide-ui/homepage-guide-ui/">Back to the POC first page</a> -->
       <a href="/scroll-poc/public/scroll-poc.html">Back to the POC first page</a>
     </main>
+    <section id="#special">
+      This is the special section page where the navigation to a diffrent page with an anchor should point.
+    </section>
 
     <script>
       addEventListener('beforeunload', () => {
