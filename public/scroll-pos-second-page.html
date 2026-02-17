@@ -31,16 +31,24 @@
       <!-- <a href="/serviceproxy/homepage-guide-ui/homepage-guide-ui/">Back to the POC first page</a> -->
       <a href="/scroll-poc/public/scroll-poc.html">Back to the POC first page</a>
     </main>
-    <section id="#special">
+    <section id="special">
       This is the special section page where the navigation to a diffrent page with an anchor should point.
     </section>
 
     <script>
       addEventListener('beforeunload', () => {
-        const position = 0;
+        sendMessage();
+      });
+      addEventListener("load", () => {
+        if(window.location.hash && document.querySelector(window.location.hash)) {
+          const position = document.querySelector(window.location.hash).getBoundingClientRect().top + window.scrollY;
+          sendMessage(position);
+        }
+      })
+      function sendMessage(position = 0) {
         const payload = { type: 'scroll-request', position };
         window.parent.postMessage(payload, '*');
-      });
+      }
     </script>
   </body>
 </html>
