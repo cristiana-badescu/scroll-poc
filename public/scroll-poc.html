@@ -90,22 +90,27 @@
     </section>
 
     <script>
-      // navigation with anchor
+      // simulated navigation with anchor
       const input = document.getElementById('positionInput');
       const btn = document.getElementById('sendBtn');
 
       btn.addEventListener('click', () => {
         const position = Number(input.value);
-        const payload = { type: 'scroll-request', position };
-        window.parent.postMessage(payload, '*');
+        sendMessage(position)
       });
 
-      // navigation without anchor
-      addEventListener('beforeunload', () => {
-        const position = 0;
+      // navigation
+      addEventListener("load", () => {
+          const position = window.location.hash && document.querySelector(window.location.hash) ?
+            document.querySelector(window.location.hash).getBoundingClientRect().top + window.scrollY : 
+            0;
+          sendMessage(position);
+      })
+
+      function sendMessage(position = 0) {
         const payload = { type: 'scroll-request', position };
         window.parent.postMessage(payload, '*');
-      });
+      }
     </script>
   </body>
 </html>
