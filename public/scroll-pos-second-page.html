@@ -36,14 +36,11 @@
     </section>
 
     <script>
-      addEventListener('beforeunload', () => {
-        sendMessage();
-      });
       addEventListener("load", () => {
-        if(window.location.hash && document.querySelector(window.location.hash)) {
-          const position = document.querySelector(window.location.hash).getBoundingClientRect().top + window.scrollY;
+          const position = window.location.hash && document.querySelector(window.location.hash) ?
+            document.querySelector(window.location.hash).getBoundingClientRect().top + window.scrollY : 
+            0;
           sendMessage(position);
-        }
       })
       function sendMessage(position = 0) {
         const payload = { type: 'scroll-request', position };
